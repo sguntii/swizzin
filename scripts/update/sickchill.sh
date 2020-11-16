@@ -50,7 +50,8 @@ SRC
 	if [[ $active == 'active' ]]; then
 		systemctl start sickchill@$master
 	fi
-	mv /install/.sickrage.lock /install/.sickchill.lock
+	unmark_installed sickrage
+	mark_installed sickchill
 fi
 
 if is_installed sickchill; then
