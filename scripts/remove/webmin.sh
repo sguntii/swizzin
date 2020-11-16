@@ -11,6 +11,4 @@ if [[ -f /install/.nginx.lock ]]; then
 	systemctl reload nginx
 fi
 
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
 unmark_installed "webmin"

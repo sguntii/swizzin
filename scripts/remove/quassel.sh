@@ -26,12 +26,10 @@ if [[ $distribution == "Ubuntu" ]]; then
 	apt_remove --purge quassel-core
 	rm /etc/apt/sources.list.d/mamarley-ubuntu-quassel*.list
 	apt_update
-	#shellcheck source=sources/functions/lockfiles.sh
-	. /etc/swizzin/sources/functions/lockfiles.sh
+
 	unmark_installed "quassel"
 else
 	dpkg -r quassel-core* > /dev/null 2>&1
-	#shellcheck source=sources/functions/lockfiles.sh
-	. /etc/swizzin/sources/functions/lockfiles.sh
+
 	unmark_installed "quassel"
 fi

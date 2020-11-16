@@ -22,8 +22,7 @@ MASTER=$(cut -d: -f1 < /root/.master.info)
 function _removeRapidleech() {
 	sudo rm -r /home/"${MASTER}"/rapidleech
 	sudo rm /etc/nginx/apps/rapidleech.conf
-	sudo #shellcheck source=sources/functions/lockfiles.sh
-	. /etc/swizzin/sources/functions/lockfiles.sh
+	sudo
 	unmark_installed "rapidleech"
 	systemctl reload nginx
 }

@@ -12,6 +12,5 @@ dpkg -r libtorrent-rasterbar > /dev/null 2>&1
 dpkg -r python-libtorrent > /dev/null 2>&1
 dpkg -r python3-libtorrent > /dev/null 2>&1
 dpkg -r deluge-common > /dev/null 2>&1
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "libtorrent"

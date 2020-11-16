@@ -8,8 +8,7 @@ if [ -z "$(ls -A /home/$user/.venv)" ]; then
 	rm -rf /opt/.venv
 fi
 rm -rf /etc/nginx/apps/bazarr.conf
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "bazarr"
 rm -rf /etc/systemd/system/bazarr.service
 systemctl reload nginx

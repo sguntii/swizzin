@@ -13,7 +13,6 @@ if [[ ! -f /install/.flood.lock ]]; then
 		rm -f /etc/nginx/apps/${u}.scgi.conf
 	done
 fi
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "rutorrent"
 systemctl reload nginx

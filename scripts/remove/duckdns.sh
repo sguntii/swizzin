@@ -13,6 +13,4 @@ echo_progress_done
 rm -rf /opt/duckdns
 crontab -l | grep -v '/opt/duckdns' | crontab -
 
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
 unmark_installed "duckdns"

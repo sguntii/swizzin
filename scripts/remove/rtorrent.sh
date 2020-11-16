@@ -28,6 +28,5 @@ for a in rutorrent flood; do
 	fi
 done
 rm /etc/systemd/system/rtorrent@.service
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "rtorrent"

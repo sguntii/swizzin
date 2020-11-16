@@ -32,8 +32,7 @@ function _removeSonarr() {
 		sudo rm /etc/default/sonarr
 		sudo rm /etc/init.d/sonarr
 	fi
-	sudo #shellcheck source=sources/functions/lockfiles.sh
-	. /etc/swizzin/sources/functions/lockfiles.sh
+	sudo
 	unmark_installed "sonarr"
 
 	if [[ -f /install/.nginx.lock ]]; then

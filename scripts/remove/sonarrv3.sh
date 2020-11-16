@@ -10,6 +10,4 @@ if [[ -f /install/.nginx.lock ]]; then
 	systemctl reload nginx >> $log 2>&1
 fi
 
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
 unmark_installed "sonarrv3"

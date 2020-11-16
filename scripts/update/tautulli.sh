@@ -36,8 +36,7 @@ if [[ -f /install/.plexpy.lock ]]; then
 	systemctl stop plexpy
 	systemctl disable -q plexpy
 	rm -rf /opt/plexpy
-	#shellcheck source=sources/functions/lockfiles.sh
-	. /etc/swizzin/sources/functions/lockfiles.sh
+
 	unmark_installed "plexpy"
 	rm -f /etc/nginx/apps/plexpy.conf
 	systemctl reload nginx

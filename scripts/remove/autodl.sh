@@ -9,6 +9,5 @@ for u in "${users[@]}"; do
 	rm -rf /home/${u}/.irssi
 done
 rm /etc/systemd/system/irssi@.service
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "autodl"

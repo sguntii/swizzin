@@ -24,7 +24,6 @@ rm -rf /srv/subsonic
 rm -rf /var/subsonic
 rm -rf /usr/share/subsonic
 rm -f /etc/nginx/apps/subsonic.conf
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "subsonic"
 systemctl reload nginx

@@ -7,6 +7,5 @@ if [[ -f /etc/apt/sources.list.d/emby-server.list ]]; then
 	rm /etc/apt/sources.list.d/emby-server.list
 fi
 rm -rf /etc/nginx/apps/emby.conf
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "emby"

@@ -17,8 +17,7 @@ if [[ -f /install/.nginx.lock ]]; then
 	systemctl -q reload nginx.service
 fi
 #
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "jellyfin"
 #
 exit

@@ -9,6 +9,5 @@ rm_if_exists /usr/bin/rclone
 rm_if_exists /usr/sbin/rclone
 rm_if_exists /etc/systemd/system/rclone@.service
 rm_if_exists /usr/local/share/man/man1/rclone.1
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "rclone"

@@ -11,7 +11,6 @@ rm -rf /opt/.venv/headphones
 if [ -z "$(ls -A /opt/.venv)" ]; then
 	rm -rf /opt/.venv
 fi
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "headphones"
 systemctl reload nginx

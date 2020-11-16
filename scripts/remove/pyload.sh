@@ -12,6 +12,5 @@ fi
 rm -rf /etc/nginx/apps/pyload.conf
 apt_remove tesseract-ocr gocr rhino
 systemctl reload nginx > /dev/null 2>&1
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "pyload"

@@ -27,8 +27,7 @@ function _removePlex() {
 	rm -rf /usr/lib/plexmediaserver
 	rm /etc/init/plexmediaserver.conf > /dev/null 2>&1
 	rm /etc/default/plexmediaserver > /dev/null 2>&1
-	#shellcheck source=sources/functions/lockfiles.sh
-	. /etc/swizzin/sources/functions/lockfiles.sh
+
 	unmark_installed "plex"
 	userdel plex > /dev/null 2>&1
 }

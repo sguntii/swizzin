@@ -29,8 +29,7 @@ function _removeBTSync() {
 	fi
 	rm -rf /etc/systemd/system/resilio-sync.service
 	rm -rf /home/${MASTER}/sync_folder
-	#shellcheck source=sources/functions/lockfiles.sh
-	. /etc/swizzin/sources/functions/lockfiles.sh
+
 	unmark_installed "btsync"
 }
 

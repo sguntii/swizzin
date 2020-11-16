@@ -6,6 +6,5 @@ su - ${user} -c "screen -X -S xmrig quit" > /dev/null 2>&1
 rm -rf /home/${user}/.xmrig
 rm -rf /etc/systemd/system/xmrig.service
 rm -rf /usr/local/bin/xmrig
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "xmrig"

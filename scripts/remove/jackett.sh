@@ -2,8 +2,7 @@
 username=$(cut -d: -f1 < /root/.master.info)
 
 rm -r /home/$username/Jackett
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "jackett"
 rm -r /home/${username}/.config/Jackett
 

@@ -13,6 +13,4 @@ fi
 
 userdel mango -f -r >> $log 2>&1
 
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
 unmark_installed "mango"

@@ -17,7 +17,6 @@ rm_if_exists /home/${user}/.config/nzbhydra2
 
 rm /etc/systemd/system/nzbhydra.service
 rm -f /etc/nginx/apps/nzbhydra.conf
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "nzbhydra"
 systemctl reload nginx

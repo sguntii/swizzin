@@ -26,6 +26,4 @@ echo_progress_done
 
 apt_update
 
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
 unmark_installed "wireguard"

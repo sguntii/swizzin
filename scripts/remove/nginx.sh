@@ -16,10 +16,7 @@ rm_if_exists "/srv/rutorrent"
 rm_if_exists "/srv/panel"
 rm_if_exists "/etc/sudoers.d/panel"
 rm_if_exists "/etc/cron.d/set_interface"
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "rutorrent"
 
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
 unmark_installed "nginx"

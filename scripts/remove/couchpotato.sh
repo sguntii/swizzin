@@ -12,6 +12,5 @@ if [ -z "$(ls -A /opt/.venv)" ]; then
 fi
 rm -f /etc/nginx/apps/couchpotato.conf
 systemctl reload nginx
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "couchpotato"

@@ -13,6 +13,5 @@ if [ -z "$(ls -A /opt/.venv)" ]; then
 	rm -rf /opt/.venv
 fi
 
-sudo #shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+sudo
 unmark_installed "medusa"

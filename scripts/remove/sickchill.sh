@@ -11,6 +11,5 @@ fi
 rm /etc/nginx/apps/sickchill.conf > /dev/null 2>&1
 rm /etc/systemd/sickchill.service > /dev/null 2>&1
 systemctl reload nginx
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "sickchill"

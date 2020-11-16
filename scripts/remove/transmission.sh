@@ -17,6 +17,4 @@ rm /etc/nginx/conf.d/*.transmission.conf >> "$log" 2>&1
 systemctl reload nginx >> "$log" 2>&1
 systemctl daemon-reload
 
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
 unmark_installed "transmission"

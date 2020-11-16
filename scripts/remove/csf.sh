@@ -21,8 +21,7 @@
 function _removeCSF() {
 	cd /etc/csf
 	sh uninstall.sh >> "${log}" 2>&1
-	#shellcheck source=sources/functions/lockfiles.sh
-	. /etc/swizzin/sources/functions/lockfiles.sh
+
 	unmark_installed "csf"
 }
 

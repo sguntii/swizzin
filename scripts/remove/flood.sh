@@ -16,8 +16,7 @@ if [[ ! -f /install/.rutorrent.lock ]]; then
 fi
 rm -rf /etc/systemd/system/flood@.service
 systemctl reload nginx
-#shellcheck source=sources/functions/lockfiles.sh
-. /etc/swizzin/sources/functions/lockfiles.sh
+
 unmark_installed "flood"
 
 users=($(cut -d: -f1 < /etc/htpasswd))
