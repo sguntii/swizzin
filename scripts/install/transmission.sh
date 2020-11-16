@@ -182,7 +182,7 @@ _mkconf_transmission() {
 }
 EOF
 	echo_progress_done "Config created"
-	if [[ ! -f /install/.nginx.lock ]]; then
+	if ! is_installed nginx; then
 		echo_info "Transmission RPC port for ${bold}${user} = ${rpc_port}"
 	fi
 }
@@ -238,7 +238,7 @@ for user in ${users[@]}; do
 	echo_progress_done "Transmission set up for $user"
 done
 
-if [[ -f /install/.nginx.lock ]]; then
+if is_installed nginx; then
 	echo_progress_start "Creating nginx config"
 	_nginx_transmission
 	echo_progress_done "Nginx configured"

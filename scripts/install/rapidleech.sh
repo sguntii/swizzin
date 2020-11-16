@@ -18,7 +18,7 @@
 #   under the GPL along with build & install instructions.
 #
 
-if [[ ! -f /install/.nginx.lock ]]; then
+if ! is_installed nginx; then
 	echo_error "Web server not detected. Please install nginx and restart panel install."
 	exit 1
 fi
@@ -32,7 +32,7 @@ function _installRapidleech1() {
 }
 
 function _installRapidleech3() {
-	if [[ -f /install/.nginx.lock ]]; then
+	if is_installed nginx; then
 		echo_progress_start "Configuring nginx"
 		bash /usr/local/bin/swizzin/nginx/rapidleech.sh
 		systemctl reload nginx

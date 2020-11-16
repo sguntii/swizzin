@@ -2,7 +2,7 @@
 # Librespeed installer for swizzin
 # Author: hwcltjn
 
-if [[ ! -f /install/.nginx.lock ]]; then
+if ! is_installed nginx; then
 	echo_error "Web server not detected. Please install nginx and restart panel install."
 	exit 1
 fi
@@ -35,7 +35,7 @@ function _installLibreSpeed2() {
 }
 
 function _installLibreSpeed3() {
-	if [[ -f /install/.nginx.lock ]]; then
+	if is_installed nginx; then
 		echo_progress_start "Configuring nginx"
 		bash /usr/local/bin/swizzin/nginx/librespeed.sh
 		systemctl reload nginx

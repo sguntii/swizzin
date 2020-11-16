@@ -3,8 +3,8 @@
 # Author: liara
 # Copyright (c) swizzin 2018
 
-if [[ -f /install/.deluge.lock ]]; then
-	if [[ ! -f /install/.libtorrent.lock ]]; then
+if is_installed deluge; then
+	if ! is_installed libtorrent; then
 		mark_installed "libtorrent"
 	fi
 fi

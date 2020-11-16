@@ -11,7 +11,7 @@
 #
 #! /bin/bash
 
-if [[ ! -f /install/.nginx.lock ]]; then
+if ! is_installed nginx; then
 	echo_warn "This package requires nginx to be installed!"
 	if ask "Install nginx?" Y; then
 		bash /usr/local/bin/swizzin/install/nginx.sh
@@ -43,7 +43,7 @@ mkdir -p /etc/nginx/apps
 echo_progress_done
 
 echo_progress_start "Configuring panel"
-if [[ -f /install/.deluge.lock ]]; then
+if is_installed deluge; then
 	mark_installed "delugeweb"
 fi
 
@@ -54,7 +54,7 @@ else
 fi
 echo_progress_done
 
-if [[ -f /install/.nginx.lock ]]; then
+if is_installed nginx; then
 	echo_progress_start "Configuring nginx"
 	bash /usr/local/bin/swizzin/nginx/panel.sh
 	systemctl reload nginx

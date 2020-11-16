@@ -23,7 +23,7 @@ rm /etc/systemd/system/deluged@.service
 rm /etc/systemd/system/deluge-web@.service
 apt_remove --purge deluge*
 
-if [[ -f /install/.nginx.lock ]]; then
+if is_installed nginx; then
 	rm -f /etc/nginx/apps/deluge.conf > /dev/null 2>&1
 	rm -f /etc/nginx/apps/dindex.conf > /dev/null 2>&1
 	rm -f /etc/nginx/conf.d/*.deluge.conf > /dev/null 2>&1
@@ -35,6 +35,6 @@ unmark_installed "deluge"
 
 unmark_installed "delugeweb"
 
-if [[ ! -f /install/.qbittorrent.lock ]]; then
+if ! is_installed qbittorrent; then
 	bash /etc/swizzin/scripts/remove/libtorrent.sh
 fi

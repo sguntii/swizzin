@@ -1,6 +1,6 @@
 #! /bin/bash
 
-if [[ -f /install/.panel.lock ]]; then
+if is_installed panel; then
 	if [[ ! -d /opt/swizzin ]]; then
 		master=$(cut -d: -f1 < /root/.master.info)
 
@@ -14,7 +14,7 @@ if [[ -f /install/.panel.lock ]]; then
 		setfacl -m g:swizzin:rx /home/*
 		mkdir -p /etc/nginx/apps
 
-		if [[ -f /install/.deluge.lock ]]; then
+		if is_installed deluge; then
 			mark_installed "delugeweb"
 		fi
 
@@ -24,7 +24,7 @@ if [[ -f /install/.panel.lock ]]; then
 			echo "ADMIN_USER = '$master'" >> /opt/swizzin/swizzin/swizzin.cfg
 		fi
 
-		if [[ -f /install/.nginx.lock ]]; then
+		if is_installed nginx; then
 			echo "HOST = '127.0.0.1'" >> /opt/swizzin/swizzin/swizzin.cfg
 
 			cat > /etc/nginx/apps/panel.conf << 'EON'

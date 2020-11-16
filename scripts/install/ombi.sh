@@ -60,7 +60,7 @@ OMB
 
 	mark_installed "ombi"
 	echo_progress_done "Service installed"
-	if [[ -f /install/.nginx.lock ]]; then
+	if is_installed nginx; then
 		echo_progress_start "Configuring nginx"
 		bash /usr/local/bin/swizzin/nginx/ombi.sh
 		systemctl reload nginx

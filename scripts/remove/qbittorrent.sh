@@ -15,6 +15,6 @@ systemctl reload nginx
 
 unmark_installed "qbittorrent"
 
-if [[ ! -f /install/.deluge.lock ]]; then
+if ! is_installed deluge; then
 	bash /etc/swizzin/scripts/remove/libtorrent.sh
 fi

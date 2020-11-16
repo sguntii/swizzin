@@ -265,18 +265,18 @@ function _adduser() {
 	htpasswd -b -c /etc/htpasswd.d/htpasswd.${user} $user $pass >> $log 2>&1
 	chmod 750 /home/${user}
 
-	if [[ -f /install/.quota.lock ]]; then
+	if is_installed quota; then
 		setdisk "$user"
 	fi
 
-	if [[ -f /install/.panel.lock ]]; then setfacl -m g:swizzin:rx /home/${user}; fi
+	if is_installed panel; then setfacl -m g:swizzin:rx /home/${user}; fi
 	echo "D /var/run/${user} 0750 ${user} ${user} -" >> /etc/tmpfiles.d/${user}.conf
 	systemd-tmpfiles /etc/tmpfiles.d/${user}.conf --create >> $log 2>&1
 
 	for app in rtorrent rutorrent deluge autodl flood nzbget lounge transmission wireguard organizr mango qbittorrent; do
 		if [[ $app = "rutorrent" ]]; then
 			if [[ -d /srv/rutorrent ]]; then
-				if [[ ! -f /install/.rutorrent.lock ]]; then mark_installed "rutorrent"; fi
+				if ! is_installed rutorrent; then mark_installed "rutorrent"; fi
 			fi
 		fi
 
@@ -306,7 +306,7 @@ Cmnd_Alias   ${USER}CMDS = /bin/systemctl stop flood@${user}, /bin/systemctl res
 
 ${user}     ALL = (ALL) NOPASSWD: ${USER}CMDS
 SUD
-	if [[ -f /install/.nginx.lock ]]; then
+	if is_installed nginx; then
 		systemctl reload nginx
 	fi
 
@@ -335,7 +335,7 @@ function _deluser() {
 	for app in rtorrent rutorrent deluge autodl flood nzbget lounge transmission mango wireguard organizr qbittorrent; do
 		if [[ $app = "rutorrent" ]]; then
 			if [[ -d /srv/rutorrent ]]; then
-				if [[ ! -f /install/.rutorrent.lock ]]; then mark_installed "rutorrent"; fi
+				if ! is_installed rutorrent; then mark_installed "rutorrent"; fi
 			fi
 		fi
 
@@ -437,18 +437,18 @@ function _chpasswd() {
 		sed -i "s/.*rpc-password.*/  \"rpc-password\": \"${pass}\",/" /home/$user/.config/transmission-daemon/settings.json
 		systemctl start transmission@${user} >> $log 2>&1
 	fi
-	if [[ -f /install/.lounge.lock ]]; then
+	if is_installed lounge; then
 		su -s /bin/sh lounge -c "thelounge reset $user " <<< "${pass}" >> $log 2>&1
 	fi
-	if [[ -f /install/.mango.lock ]]; then
+	if is_installed mango; then
 		if [[ -z $mangodir ]]; then mangodir="/opt/mango"; fi
 		su mango -c "$mangodir/mango admin user update ${user} -p ${pass}" >> $log 2>&1
 	fi
-	if [[ -f /install/.organizr.lock ]]; then
+	if is_installed organizr; then
 		#TODO fix when API allows to
 		echo_warn "Remember to manually change the organizr account's password!"
 	fi
-	if [[ -f /install/.qbittorrent.lock ]]; then
+	if is_installed qbittorrent; then
 		. /etc/swizzin/sources/functions/qbittorrent
 		qbittorrent_chpasswd ${user} ${pass}
 	fi

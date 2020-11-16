@@ -35,7 +35,7 @@ function _removeSonarr() {
 	sudo
 	unmark_installed "sonarr"
 
-	if [[ -f /install/.nginx.lock ]]; then
+	if is_installed nginx; then
 		rm -f /etc/nginx/apps/sonarr.conf
 		systemctl reload nginx
 	fi

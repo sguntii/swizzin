@@ -48,7 +48,7 @@ ADC
 		chown -R $u: /home/${u}/.irssi/
 		echo_progress_done
 	done
-	if [[ -f /install/.nginx.lock ]]; then
+	if is_installed nginx; then
 		bash /usr/local/bin/swizzin/nginx/autodl.sh
 	fi
 }

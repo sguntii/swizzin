@@ -8,7 +8,7 @@
 #Handles existing v2 instances
 _sonarrv2_flow() {
 	v2present=false
-	if [[ -f /install/.sonarr.lock ]]; then
+	if is_installed sonarr; then
 		v2present=true
 	fi
 	if dpkg -l | grep nzbdrone > /dev/null 2>&1; then
@@ -23,7 +23,7 @@ _sonarrv2_flow() {
 
 		if ask "Would you like to trigger a Sonarr-side backup?" Y; then
 			echo_progress_start "Backing up Sonarr v2"
-			if [[ -f /install/.nginx.lock ]]; then
+			if is_installed nginx; then
 				address="http://127.0.0.1:8989/sonarr/api"
 			else
 				address="http://127.0.0.1:8989/api"
@@ -175,7 +175,7 @@ _install_sonarrv3() {
 # }
 
 _nginx_sonarr() {
-	if [[ -f /install/.nginx.lock ]]; then
+	if is_installed nginx; then
 		#TODO what is this sleep here for? See if this can be fixed by doing a check for whatever it needs to
 		sleep 10
 		echo_progress_start "Installing nginx configuration"
@@ -192,15 +192,15 @@ _nginx_sonarr
 
 mark_installed "sonarrv3"
 
-if [[ -f /install/.ombi.lock ]]; then
+if is_installed ombi; then
 	echo_info "Please adjust your Ombi setup accordingly"
 fi
 
-if [[ -f /install/.tautulli.lock ]]; then
+if is_installed tautulli; then
 	echo_info "Please adjust your Tautulli setup accordingly"
 fi
 
-if [[ -f /install/.bazarr.lock ]]; then
+if is_installed bazarr; then
 	echo_info "Please adjust your Bazarr setup accordingly"
 fi
 

@@ -84,7 +84,7 @@ cat > "/etc/systemd/system/filebrowser.service" <<- SERVICE
 SERVICE
 #
 # Configure the nginx proxypass using positional parameters.
-if [[ -f /install/.nginx.lock ]]; then
+if is_installed nginx; then
 	echo_progress_start "Installing nginx config"
 	bash "/usr/local/bin/swizzin/nginx/filebrowser.sh" "${app_port_http}"
 	systemctl reload nginx
@@ -102,7 +102,7 @@ mark_installed "filebrowser"
 # A helpful echo to the terminal.
 echo_success "FileBrowser installed"
 #
-if [[ ! -f /install/.nginx.lock ]]; then
+if ! is_installed nginx; then
 	echo_info "Filebrowser is available at: https://$(curl -s4 icanhazip.com):${app_port_http}"
 else
 	echo_info "Filebrowser is now available in the panel"

@@ -79,7 +79,7 @@ wget -q -O - "https://repo.jellyfin.org/$DIST_ID/jellyfin_team.gpg.key" | apt-ke
 echo "deb [arch=$(dpkg --print-architecture)] https://repo.jellyfin.org/$DIST_ID $DIST_CODENAME main" > /etc/apt/sources.list.d/jellyfin.list
 #
 # install jellyfin and jellyfin-ffmepg using apt functions.
-apt_update	#forces apt refresh
+apt_update #forces apt refresh
 apt_install jellyfin jellyfin-ffmpeg
 #
 # Add the jellyfin user to the master user's group.
@@ -91,9 +91,9 @@ chown jellyfin:root /etc/jellyfin/logging.json
 chown jellyfin:adm /etc/jellyfin
 #
 # Configure the nginx proxypass using positional parameters.
-if [[ -f /install/.nginx.lock ]]; then
- bash /usr/local/bin/swizzin/nginx/jellyfin.sh
- systemctl -q restart nginx.service
+if is_installed nginx; then
+	bash /usr/local/bin/swizzin/nginx/jellyfin.sh
+	systemctl -q restart nginx.service
 fi
 #
 # Restart the jellyfin service to make sure our changes take effect
