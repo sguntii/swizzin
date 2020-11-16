@@ -8,8 +8,10 @@ rm -rf /opt/couchpotato
 rm -rf /home/${user}/.config/couchpotato
 rm -rf /opt/.venv/couchpotato
 if [ -z "$(ls -A /opt/.venv)" ]; then
-   rm -rf  /opt/.venv
+	rm -rf /opt/.venv
 fi
 rm -f /etc/nginx/apps/couchpotato.conf
 systemctl reload nginx
-rm /install/.couchpotato.lock
+#shellcheck source=sources/functions/lockfiles.sh
+. /etc/swizzin/sources/functions/lockfiles.sh
+unmark_installed "couchpotato"

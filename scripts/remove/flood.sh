@@ -4,18 +4,20 @@
 
 users=($(cut -d: -f1 < /etc/htpasswd))
 for u in "${users[@]}"; do
-  systemctl disable -q flood@$u
-  systemctl stop -q flood@$u
-  rm -rf /home/$u/.flood
-  rm -rf /etc/nginx/conf.d/$u.flood.conf
+	systemctl disable -q flood@$u
+	systemctl stop -q flood@$u
+	rm -rf /home/$u/.flood
+	rm -rf /etc/nginx/conf.d/$u.flood.conf
 done
 rm -rf /etc/nginx/apps/flood.conf
 if [[ ! -f /install/.rutorrent.lock ]]; then
-  rm -rf /etc/nginx/apps/rindex.conf
-  rm -f /etc/nginx/apps/${u}.scgi.conf
+	rm -rf /etc/nginx/apps/rindex.conf
+	rm -f /etc/nginx/apps/${u}.scgi.conf
 fi
 rm -rf /etc/systemd/system/flood@.service
 systemctl reload nginx
-rm -rf /install/.flood.lock
+#shellcheck source=sources/functions/lockfiles.sh
+. /etc/swizzin/sources/functions/lockfiles.sh
+unmark_installed "flood"
 
 users=($(cut -d: -f1 < /etc/htpasswd))

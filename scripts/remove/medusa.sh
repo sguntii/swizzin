@@ -10,9 +10,9 @@ systemctl reload nginx
 rm -rf /opt/medusa
 rm -rf /opt/.venv/medusa
 if [ -z "$(ls -A /opt/.venv)" ]; then
-   rm -rf  /opt/.venv
+	rm -rf /opt/.venv
 fi
 
-sudo rm /install/.medusa.lock
-
-
+sudo #shellcheck source=sources/functions/lockfiles.sh
+. /etc/swizzin/sources/functions/lockfiles.sh
+unmark_installed "medusa"

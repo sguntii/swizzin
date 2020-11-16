@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 # Swizzin :: Shellinabox uninstaller
 # Author: liara
 #
@@ -11,6 +11,8 @@ systemctl disable -q shellinabox
 apt_remove --purge shellinabox
 
 rm -rf /etc/systemd/system/shellinabox.service
-rm -rf /install/.shellinabox.lock
+#shellcheck source=sources/functions/lockfiles.sh
+. /etc/swizzin/sources/functions/lockfiles.sh
+unmark_installed "shellinabox"
 rm -rf /etc/nginx/apps/shell.conf
 systemctl reload nginx

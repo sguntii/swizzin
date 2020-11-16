@@ -23,4 +23,6 @@ username=$(cut -d: -f1 < /root/.master.info)
 sed -i 's/,usrjquota=aquota.user,jqfmt=vfsv1//g' /etc/fstab
 apt_remove quota
 rm /etc/sudoers.d/quota
-rm /install/.quota.lock
+#shellcheck source=sources/functions/lockfiles.sh
+. /etc/swizzin/sources/functions/lockfiles.sh
+unmark_installed "quota"

@@ -23,11 +23,15 @@ distribution=$(lsb_release -is)
 release=$(lsb_release -cs)
 
 if [[ $distribution == "Ubuntu" ]]; then
-  apt_remove --purge quassel-core
-  rm /etc/apt/sources.list.d/mamarley-ubuntu-quassel*.list
-  apt_update
-  rm /install/.quassel.lock
+	apt_remove --purge quassel-core
+	rm /etc/apt/sources.list.d/mamarley-ubuntu-quassel*.list
+	apt_update
+	#shellcheck source=sources/functions/lockfiles.sh
+	. /etc/swizzin/sources/functions/lockfiles.sh
+	unmark_installed "quassel"
 else
-  dpkg -r quassel-core* >/dev/null 2>&1
-  rm /install/.quassel.lock
+	dpkg -r quassel-core* > /dev/null 2>&1
+	#shellcheck source=sources/functions/lockfiles.sh
+	. /etc/swizzin/sources/functions/lockfiles.sh
+	unmark_installed "quassel"
 fi

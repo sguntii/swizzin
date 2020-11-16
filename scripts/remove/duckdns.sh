@@ -11,6 +11,8 @@ echo url="https://www.duckdns.org/update?domains=$subdomain&token=$token&clear=t
 echo_progress_done
 
 rm -rf /opt/duckdns
-crontab -l | grep -v '/opt/duckdns'  | crontab -
+crontab -l | grep -v '/opt/duckdns' | crontab -
 
-rm /install/.duckdns.lock
+#shellcheck source=sources/functions/lockfiles.sh
+. /etc/swizzin/sources/functions/lockfiles.sh
+unmark_installed "duckdns"

@@ -2,10 +2,10 @@
 echo_log_only "Removing Transmission"
 users=($(cut -d: -f1 < /etc/htpasswd))
 for u in ${users[@]}; do
-    echo_log_only "Shutting down transmission@$u"
-    systemctl stop transmission@"$u" >> "$log" 2>&1
-    systemctl disable transmission@"$u" >> "$log" 2>&1
-    rm -f /home/${u}/.config/transmission-daemon/settings.json
+	echo_log_only "Shutting down transmission@$u"
+	systemctl stop transmission@"$u" >> "$log" 2>&1
+	systemctl disable transmission@"$u" >> "$log" 2>&1
+	rm -f /home/${u}/.config/transmission-daemon/settings.json
 done
 
 add-apt-repository --remove ppa:transmissionbt/ppa -y >> $log 2>&1
@@ -17,4 +17,6 @@ rm /etc/nginx/conf.d/*.transmission.conf >> "$log" 2>&1
 systemctl reload nginx >> "$log" 2>&1
 systemctl daemon-reload
 
-rm /install/.transmission.lock
+#shellcheck source=sources/functions/lockfiles.sh
+. /etc/swizzin/sources/functions/lockfiles.sh
+unmark_installed "transmission"

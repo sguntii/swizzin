@@ -19,5 +19,7 @@
 #
 #################################################################################
 apt_remove --purge x2goserver* xfce4*
-rm /install/.x2go.lock
+#shellcheck source=sources/functions/lockfiles.sh
+. /etc/swizzin/sources/functions/lockfiles.sh
+unmark_installed "x2go"
 rm /etc/apt/sources.list.d/x2go*

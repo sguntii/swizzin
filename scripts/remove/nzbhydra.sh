@@ -8,7 +8,7 @@ rm_if_exists /opt/nzbhydra
 rm_if_exists /home/${user}/.config/nzbhydra
 rm_if_exists /opt/.venv/nzbhydra
 if [ -z "$(ls -A /opt/.venv)" ]; then
-   rm -rf  /opt/.venv
+	rm -rf /opt/.venv
 fi
 
 #nzbhydra2 installs
@@ -17,5 +17,7 @@ rm_if_exists /home/${user}/.config/nzbhydra2
 
 rm /etc/systemd/system/nzbhydra.service
 rm -f /etc/nginx/apps/nzbhydra.conf
-rm /install/.nzbhydra.lock
+#shellcheck source=sources/functions/lockfiles.sh
+. /etc/swizzin/sources/functions/lockfiles.sh
+unmark_installed "nzbhydra"
 systemctl reload nginx
