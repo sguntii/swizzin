@@ -11,7 +11,7 @@ if is_installed sonarr || is_installed radarr || is_installed lidarr; then
 		if [[ $a =~ ("sonarr") ]]; then
 			a=$a@$master
 		fi
-		if [[ -f /install/.$a.lock ]]; then
+		if is_installed "$a"; then
 			systemctl try-restart $a
 		fi
 	done

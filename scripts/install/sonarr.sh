@@ -27,7 +27,7 @@ function _check_for_sonarr3() {
 		#TODO check if unit is still masked. Unmaks it if that's the case.
 	fi
 
-	if [[ -f /install/.sonarrv3.lock ]]; then
+	if is_installed "sonarrv3"; then
 		v3present=true
 	fi
 

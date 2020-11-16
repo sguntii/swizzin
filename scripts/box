@@ -50,7 +50,7 @@ function _install() {
 	locks=($(find /usr/local/bin/swizzin/install -type f -printf "%f\n" | cut -d "." -f 1 | sort -d))
 	for i in "${locks[@]}"; do
 		app=${i}
-		if [[ ! -f /install/.$app.lock ]]; then
+		if ! is_installed "$app"; then
 			installa+=("$i" '""')
 		fi
 	done
@@ -72,7 +72,7 @@ function _remove() {
 	locks=($(find /usr/local/bin/swizzin/remove -type f -printf "%f\n" | cut -d "." -f 1 | sort -d))
 	for i in "${locks[@]}"; do
 		app=${i}
-		if [[ -f /install/.$app.lock ]]; then
+		if is_installed "$app"; then
 			removea+=("$i" '""')
 		fi
 	done
@@ -93,7 +93,7 @@ function _cli() {
 	repo=($(find /usr/local/bin/swizzin/install -type f -printf "%f\n" | cut -d "." -f 1))
 	for i in "${packages[@]}"; do
 		app=${i}
-		if [[ -f /install/.${app}.lock ]]; then
+		if is_installed "${app}"; then
 			echo_warn "Package $i already installed"
 		else
 			if [[ "${repo[*]}" =~ $i ]]; then
@@ -112,7 +112,7 @@ function _clr() {
 	packages=("${arg[@]:1}")
 	for i in "${packages[@]}"; do
 		app=${i}
-		if [[ -f /install/.$app.lock ]]; then
+		if is_installed "$app"; then
 			schedule_remove="true"
 			echo_info "Removing $i "
 			bash /usr/local/bin/swizzin/remove/$i.sh
@@ -280,7 +280,7 @@ function _adduser() {
 			fi
 		fi
 
-		if [[ -f /install/.${app}.lock ]]; then
+		if is_installed "${app}"; then
 			if [[ $app = "flood" ]]; then
 				/usr/local/bin/swizzin/install/${app}.sh
 			else
@@ -339,7 +339,7 @@ function _deluser() {
 			fi
 		fi
 
-		if [[ -f /install/.${app}.lock ]]; then
+		if is_installed "${app}"; then
 			if [[ $app = "rutorrent" ]]; then
 				rm -rf /srv/rutorrent/conf/users/${user}
 				rm -rf /srv/rutorrent/share/users/${user}
