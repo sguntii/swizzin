@@ -13,7 +13,7 @@
 apt_install vsftpd ssl-cert
 
 echo_progress_start "Configuring vsftpd"
-cat > /etc/vsftpd.conf <<VSC
+cat > /etc/vsftpd.conf << VSC
 listen=NO
 listen_ipv6=YES
 anonymous_enable=NO
@@ -54,9 +54,8 @@ VSC
 . /etc/swizzin/sources/functions/letsencrypt
 le_vsftpd_hook
 
-
 systemctl restart vsftpd
 echo_progress_done "Configured vsftpd"
 
 echo_success "Vsftpd installed"
-touch /install/.vsftpd.lock
+mark_installed "vsftpd"

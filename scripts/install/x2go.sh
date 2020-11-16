@@ -30,7 +30,7 @@ if [[ $distribution == Ubuntu ]]; then
 	echo_progress_done "Repos installed via PPA"
 	apt_update
 else
-	cat >/etc/apt/sources.list.d/x2go.list<<EOF
+	cat > /etc/apt/sources.list.d/x2go.list << EOF
 # X2Go Repository (release builds)
 deb http://packages.x2go.org/debian ${release} main
 # X2Go Repository (sources of release builds)
@@ -53,4 +53,4 @@ fi
 
 apt_install x2goserver x2goserver-xsession pulseaudio
 
-touch /install/.x2go.lock
+mark_installed "x2go"
