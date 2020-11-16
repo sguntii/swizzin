@@ -80,6 +80,7 @@ Please consult the swizzin log for further info if required."
 
 	echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
 	sysctl -p > /dev/null 2>&1
+	mark_installed wireguard
 	echo "$wgiface" > /install/.wireguard.lock
 	mark_installed "wireguard"
 }
