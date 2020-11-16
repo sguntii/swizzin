@@ -82,7 +82,6 @@ Please consult the swizzin log for further info if required."
 	sysctl -p > /dev/null 2>&1
 	mark_installed wireguard
 	echo "$wgiface" > /install/.wireguard.lock
-	mark_installed "wireguard"
 }
 
 function _mkconf_wg() {

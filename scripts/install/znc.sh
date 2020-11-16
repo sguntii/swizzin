@@ -63,6 +63,7 @@ if is_installed ginx; then
 fi
 
 systemctl start znc
+mark_installed znc
 echo "$(grep Port /home/znc/.znc/configs/znc.conf | sed -e 's/^[ \t]*//')" > /install/.znc.lock
 echo "$(grep SSL /home/znc/.znc/configs/znc.conf | sed -e 's/^[ \t]*//')" >> /install/.znc.lock
 echo_success "ZNC installed"
