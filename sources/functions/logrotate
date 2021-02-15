@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 install_swiz_logrotate() {
+    echo_log_only "Configuring logrotate"
     mkdir -p /etc/lorgotate.d
     if ! grep -q "include /etc/logrotate.d" /etc/logrotate.conf; then
         echo_log_only "Adding logrotate.d to conf"
