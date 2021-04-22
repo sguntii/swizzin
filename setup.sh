@@ -211,6 +211,17 @@ function _preparation() {
     if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=500000" >> /etc/systemd/system.conf; fi
     echo_progress_done "Setup succesful"
     echo
+    #Check path for /usr/sbin to prevent cracklib-check errors
+    case :$PATH: in
+        *:/usr/sbin:*) ;;
+            # do nothing, it's there
+        *)
+            echo_info "/usr/sbin not in PATH. Applying fix."
+            export PATH=$PATH:/usr/sbin
+            echo "export PATH=\$PATH:/usr/sbin" >> /root/.bashrc
+            ;;
+    esac
+
 }
 
 #FYI code duplication from `box rmgrsec`
