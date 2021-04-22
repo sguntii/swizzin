@@ -214,9 +214,9 @@ function _preparation() {
     #Check path for /usr/sbin to prevent cracklib-check errors
     case :$PATH: in
         *:/usr/sbin:*) ;;
-            # do nothing, it's there
+            # PATH contains sbin so do nothing
         *)
-            echo_info "/usr/sbin not in PATH. Applying fix."
+            echo_info "/usr/sbin is not in root's \$PATH. Applying fix."
             export PATH=$PATH:/usr/sbin
             echo "export PATH=\$PATH:/usr/sbin" >> /root/.bashrc
             ;;
