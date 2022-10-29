@@ -3,11 +3,22 @@
 function update_nginx() {
     codename=$(lsb_release -cs)
 
-    if [[ $codename == "stretch" ]]; then
-        mcrypt=php-mcrypt
-    else
-        mcrypt=
-    fi
+    case $codename in
+        stretch)
+            mcrypt="php-mcrypt"
+            geoip="php-geoip"
+            ;;
+        bionic | focal | buster | bullseye)
+            mcrypt=
+            geoip="php-geoip"
+            ;;
+        *)
+            mcrypt=
+            geoip=
+
+            ;;
+    esac
+
     #Deprecate nginx-extras in favour of installing fancyindex alone
 
     if dpkg -s nginx-extras > /dev/null 2>&1; then
@@ -17,7 +28,7 @@ function update_nginx() {
         rm $(ls -d /etc/nginx/modules-enabled/*.removed)
         systemctl reload nginx
     fi
-    LIST="php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-opcache php-geoip php-xml"
+    LIST="php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json php-mbstring php-opcache php-xml php-zip ${geoip} ${mcrypt}"
 
     missing=()
     for dep in $LIST; do
@@ -120,10 +131,54 @@ DIN
         fi
     fi
 
+    if [[ -f /install/.transmission.lock ]]; then
+        if grep -q "php" /etc/nginx/apps/tmsindex.conf; then
+            :
+        else
+            cat > /etc/nginx/apps/tmsindex.conf << DIN
+location /transmission.downloads {
+  alias /home/\$remote_user/torrents/transmission;
+  include /etc/nginx/snippets/fancyindex.conf;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+
+  location ~* \.php$ {
+
+  }
+}
+DIN
+        fi
+    fi
+
     # Remove php directive at the root level since we no longer use php
     # on root and we define php manually for nested locations
     if grep -q '\.php\$' /etc/nginx/sites-enabled/default; then
         sed -i -e '/location ~ \\.php$ {/,/}/d' /etc/nginx/sites-enabled/default
+    fi
+
+    # Remove fancy index location block because it's now an app conf
+    if grep -q 'fancyindex' /etc/nginx/sites-enabled/default; then
+        sed -i -e '/location \/fancyindex {/,/}/d' /etc/nginx/sites-enabled/default
+    fi
+
+    # Create fancyindex conf if not exists
+    if [[ ! -f /etc/nginx/apps/fancyindex.conf ]] || grep -q posterity /etc/nginx/apps/fancyindex.conf > /dev/null 2>&1; then
+        cat > /etc/nginx/apps/fancyindex.conf << FIAC
+location /fancyindex {
+    location ~ \.php($|/) {
+        fastcgi_split_path_info ^(.+?\.php)(/.+)$;
+        # Work around annoying nginx "feature" (https://trac.nginx.org/nginx/ticket/321)
+        set \$path_info \$fastcgi_path_info;
+        fastcgi_param PATH_INFO \$path_info;
+
+        try_files \$fastcgi_script_name =404;
+        fastcgi_pass unix:/run/php/${sock}.sock;
+        fastcgi_param SCRIPT_FILENAME \$request_filename;
+        include fastcgi_params;
+        fastcgi_index index.php;
+    }
+}
+FIAC
     fi
 
     if grep -q 'index.html' /etc/nginx/sites-enabled/default; then

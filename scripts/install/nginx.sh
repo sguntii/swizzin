@@ -10,9 +10,8 @@
 #   under the GPL along with build & install instructions.
 #
 
-distribution=$(lsb_release -is)
-release=$(lsb_release -rs)
-codename=$(lsb_release -cs)
+distribution=$(_os_distro)
+codename=$(_os_codename)
 
 if [[ -n $(pidof apache2) ]]; then
     if [[ -z $apache2 ]]; then
@@ -36,13 +35,23 @@ if [[ -n $(pidof apache2) ]]; then
     fi
 fi
 
-if [[ $codename == "stretch" ]]; then
-    mcrypt=php-mcrypt
-else
-    mcrypt=
-fi
+case $codename in
+    stretch)
+        mcrypt="php-mcrypt"
+        geoip="php-geoip"
+        ;;
+    bionic | focal | buster | bullseye)
+        mcrypt=
+        geoip="php-geoip"
+        ;;
+    *)
+        mcrypt=
+        geoip=
 
-APT="nginx libnginx-mod-http-fancyindex subversion ssl-cert php-fpm libfcgi0ldbl php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-opcache php-geoip php-xml"
+        ;;
+esac
+
+APT="nginx libnginx-mod-http-fancyindex subversion ssl-cert php-fpm libfcgi0ldbl php-cli php-dev php-xml php-curl php-xmlrpc php-json php-mbstring php-opcache php-xml php-zip ${geoip} ${mcrypt}"
 
 apt_install $APT
 mkdir -p /srv
@@ -111,10 +120,6 @@ server {
 
   location ~ /\.ht {
     deny all;
-  }
-
-  location /fancyindex {
-
   }
 }
 NGC
@@ -190,6 +195,25 @@ fancyindex_name_length 255; # Maximum file name length in bytes, change as you l
 FIC
 sed -i 's/href="\/[^\/]*/href="\/fancyindex/g' /srv/fancyindex/header.html
 sed -i 's/src="\/[^\/]*/src="\/fancyindex/g' /srv/fancyindex/footer.html
+
+#Some ruTorrent plugins need to bypass htpasswd, so we stuff the php for this here
+cat > /etc/nginx/apps/fancyindex.conf << FIAC
+location /fancyindex {
+    location ~ \.php($|/) {
+        fastcgi_split_path_info ^(.+?\.php)(/.+)$;
+        # Work around annoying nginx "feature" (https://trac.nginx.org/nginx/ticket/321)
+        set \$path_info \$fastcgi_path_info;
+        fastcgi_param PATH_INFO \$path_info;
+
+        # Make sure the script exists.
+        try_files \$fastcgi_script_name =404;
+        fastcgi_pass unix:/run/php/${sock}.sock;
+        fastcgi_param SCRIPT_FILENAME \$request_filename;
+        include fastcgi_params;
+        fastcgi_index index.php;
+    }
+}
+FIAC
 echo_progress_done "Fancyindex installed"
 
 locks=($(find /usr/local/bin/swizzin/nginx -type f -printf "%f\n" | cut -d "." -f 1 | sort -d -r))
