@@ -2,12 +2,11 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/liaralabs/swizzin/badge)](https://www.codefactor.io/repository/github/liaralabs/swizzin) [![Discord](https://img.shields.io/discord/577667871727943696?logo=discord&logoColor=white)](https://discord.gg/sKjs9UM)  ![GitHub](https://img.shields.io/github/license/liaralabs/swizzin) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/liaralabs/swizzin) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/liaralabs/swizzin)
 
-# 3.6.0 Stable
+# 3.7.1 Stable
 
 [website](https://swizzin.ltd) \| [docs](https://swizzin.ltd/getting-started) \| [discord](https://discord.gg/bDFqAUF)
 
-Please use Discord for all community functions, [feathub](https://feathub.com/liaralabs/swizzin) for feature requests and leave issues for actual issues.
-
+Please use [Discord](https://discord.gg/bDFqAUF) for all community functions, and [GitHub discussions](https://github.com/swizzin/swizzin/discussions) for feature requests and to raise issues.
 
 ## What is swizzin?
 Swizzin is a light, modular seedbox solution that can be installed on Debian 10/11 or Ubuntu 20.04/22.04. The QuickBox package repo has been ported over for your installing pleasure, including the panel -- if you so choose!
