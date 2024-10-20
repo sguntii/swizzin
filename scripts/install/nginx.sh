@@ -47,11 +47,35 @@ case $codename in
         ;;
 esac
 
+# Prepare the /etc/nginx/ssl/ for openssl dhparm generation
+mkdir -p /etc/nginx/ssl/
+chmod 700 /etc/nginx/ssl
+cd /etc/nginx/ssl
+
+# Create temp.log for openssl dhparm generation to prevent a race condition with logging
+. /etc/swizzin/sources/functions/utils
+templog="/root/logs/temp.log"
+rm_if_exists $templog
+touch $templog
+
+# Start openssl dhparam as a background task using temp.log
+openssl dhparam -out dhparam.pem 2048 >> $templog 2>&1 &
+
+# Install packages for nginx in the foreground
 APT="nginx libnginx-mod-http-fancyindex subversion ssl-cert php-fpm libfcgi0ldbl php-cli php-dev php-xml php-curl php-xmlrpc php-json php-mbstring php-opcache php-zip ${geoip} ${mcrypt}"
-
 apt_install $APT
-mkdir -p /srv
 
+# Wait for the background task of openssl dhparm generation to finish
+wait
+
+# Append the results of temp.log to swizzin.log and remove temp.log
+echo_log_only "Begin of OpenSSL dhparm results"
+cat $templog >> $log 2>&1
+echo_log_only "End of OpenSSL dhparm results"
+rm_if_exists $templog
+
+# Began configuring nginx in the foreground
+mkdir -p /srv
 cd /etc/php
 phpv=$(ls -d */ | cut -d/ -f1)
 echo_progress_start "Making adjustments to PHP"
@@ -88,6 +112,7 @@ server {
   listen 80 default_server;
   listen [::]:80 default_server;
   server_name _;
+  server_tokens off;
 
   location /.well-known {
     alias /srv/.well-known;
@@ -121,14 +146,8 @@ server {
 }
 NGC
 
-mkdir -p /etc/nginx/ssl/
 mkdir -p /etc/nginx/snippets/
 mkdir -p /etc/nginx/apps/
-
-chmod 700 /etc/nginx/ssl
-
-cd /etc/nginx/ssl
-openssl dhparam -out dhparam.pem 2048 >> $log 2>&1
 
 cat > /etc/nginx/snippets/ssl-params.conf << SSC
 ssl_protocols TLSv1.2 TLSv1.3;
@@ -179,7 +198,10 @@ PROX
 echo_progress_done "Config installed"
 
 echo_progress_start "Installing fancyindex"
-svn export https://github.com/Naereen/Nginx-Fancyindex-Theme/trunk/Nginx-Fancyindex-Theme-dark /srv/fancyindex >> $log 2>&1
+git clone https://github.com/Naereen/Nginx-Fancyindex-Theme/ /tmp/fancyindex >> $log 2>&1
+mv /tmp/fancyindex/Nginx-Fancyindex-Theme-dark /srv/fancyindex >> $log 2>&1
+rm -rf /tmp/fancyindex
+
 cat > /etc/nginx/snippets/fancyindex.conf << FIC
 fancyindex on;
 fancyindex_localtime on;

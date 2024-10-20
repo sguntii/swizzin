@@ -1,22 +1,7 @@
 #!/bin/bash
 
 function update_nginx() {
-    codename=$(lsb_release -cs)
-
-    case $codename in
-        focal | buster | bullseye)
-            mcrypt=
-            geoip="php-geoip"
-            ;;
-        *)
-            mcrypt=
-            geoip=
-
-            ;;
-    esac
-
-    #Deprecate nginx-extras in favour of installing fancyindex alone
-
+    # Deprecate nginx-extras in favour of installing fancyindex alone
     if dpkg -s nginx-extras > /dev/null 2>&1; then
         apt_remove nginx-extras
         apt_install nginx libnginx-mod-http-fancyindex
@@ -24,32 +9,23 @@ function update_nginx() {
         rm $(ls -d /etc/nginx/modules-enabled/*.removed)
         systemctl reload nginx
     fi
-    LIST="php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json php-mbstring php-opcache php-xml php-zip ${geoip} ${mcrypt}"
-
-    missing=()
-    for dep in $LIST; do
-        if ! check_installed "$dep"; then
-            missing+=("$dep")
-        fi
-    done
-
-    if [[ ${missing[1]} != "" ]]; then
-        # echo_inf "Installing the following dependencies: ${missing[*]}" | tee -a $log
-        apt_install "${missing[@]}"
-    fi
-
+    # Install missing nginx packages
+    [[ $(lsb_release -cs) =~ ^(focal|buster|bullseye)$ ]] && geoip="php-geoip" || geoip=""
+    LIST="php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json php-mbstring php-opcache php-xml php-zip ${geoip}"
+    apt_install $LIST
+    # Purge php7.0-fpm on all platforms
     cd /etc/php
     phpv=$(ls -d */ | cut -d/ -f1)
     if [[ $phpv =~ 7\\.1 ]]; then
         if [[ $phpv =~ 7\\.0 ]]; then
-            apt_remove purge php7.0-fpm
+            apt_remove --purge php7.0-fpm
         fi
     fi
-
+    # Include php functions and set vars
     . /etc/swizzin/sources/functions/php
     phpversion=$(php_service_version)
     sock="php${phpversion}-fpm"
-
+    # Reconfigure php.ini for php-fpm, enable opcache php module, set environment PATH var for php
     for version in $phpv; do
         if [[ -f /etc/php/$version/fpm/php.ini ]]; then
             echo_progress_start "Updating config for PHP $version"
@@ -75,8 +51,6 @@ function update_nginx() {
         echo_progress_done
     fi
 
-    phpversion=$(php_service_version)
-
     fcgis=($(find /etc/nginx -type f -exec grep -l "fastcgi_pass unix:/run/php/" {} \;))
     err=()
     for f in ${fcgis[@]}; do
@@ -87,6 +61,12 @@ function update_nginx() {
         sed -i "s/fastcgi_pass .*/fastcgi_pass unix:\/run\/php\/php${phpversion}-fpm.sock;/g" $fix
         echo_progress_done
     done
+
+    if [[ ! -d /srv/fancyindex ]]; then
+        git clone https://github.com/Naereen/Nginx-Fancyindex-Theme/ /tmp/fancyindex >> $log 2>&1
+        mv /tmp/fancyindex/Nginx-Fancyindex-Theme-dark /srv/fancyindex >> $log 2>&1
+        rm -rf /tmp/fancyindex
+    fi
 
     if grep -q -e "-dark" -e "Nginx-Fancyindex" /srv/fancyindex/header.html; then
         echo_progress_start "Updating fancyindex theme"
@@ -224,6 +204,13 @@ FIAC
         sed 's|listen 443 ssl default_server;|listen 443 ssl http2 default_server;|g' -i /etc/nginx/sites-enabled/default
         # IPV6 http2 upgrade
         sed 's|listen \[::]\:443 ssl default_server;|listen \[::]\:443 ssl http2 default_server;|g' -i /etc/nginx/sites-enabled/default
+        echo_progress_done
+    fi
+
+    # Disable emitting nginx version for HTTP protocol
+    if [[ $(grep -c 'server_tokens' /etc/nginx/sites-enabled/default) -lt 2 ]]; then
+        echo_progress_start "Disable emitting nginx version for HTTP protocol"
+        sed '/listen 80 default_server;/a \ \ server_tokens off;' -i /etc/nginx/sites-enabled/default
         echo_progress_done
     fi
 
